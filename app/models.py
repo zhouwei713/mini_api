@@ -43,7 +43,7 @@ class User(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(128), unique=True, index=True)
-    picture_count = db.Column(db.Integer)
+    picture_count = db.Column(db.Integer, default=1)
 
 
 class Picture(db.Model):

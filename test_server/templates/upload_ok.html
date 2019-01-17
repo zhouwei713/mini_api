@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>图片上传</title></head>
+<body>
+    <h1>Flask图片上传展示</h1>
+    <form action="" enctype='multipart/form-data' method="POST">
+        <input type="file" name="file", style="margin-top:20px;"/>
+        <br>
+        <i>输入你的名字</i>
+        <input type="text" class="txt_input" name="name" style="margin-top:10px;"/>
+        <input type="submit" value="上传" class="button-new" style="margin-top:15px;"/>
+    </form>
+    <h1>{{userinput}}的图片</h1>
+    <img src="{{ url_for('static', filename=filename ) }}" width="400" height="400" alt="你的图片捏～～"/>
+
+</body>
+
+</html>

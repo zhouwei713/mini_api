@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JS-Test</title>
+</head>
+<body>
+<form id= "uploadForm">
+      <p >指定用户名： <input type="text" name="filename" value= "" id="UID"/></p >
+      <p >上传文件： <input type="file" name="file" id="PID"/></p>
+      <input type="button" value="上传" onclick="upload()" />
+</form>
+<div class="form-group"><div id="result"></div></div>
+<script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script type="text/javascript">
+function upload(){
+//var formData = new FormData($( "#uploadForm" )[0]);
+var img_file = document.getElementById("PID");
+var fileObj = img_file.files[0];
+var formData = new FormData();
+formData.append("UID", $("#UID").val());
+formData.append("PID", fileObj);
+
+$.ajax({
+    method: "POST",
+    url: "http://127.0.0.1:9980/api/test",
+    timeout: 10000,
+    data: formData,
+    async: false,
+    headers: {"client-type":"platform",},
+    dataType: "json",
+    contentType:false,
+	processData:false,//数据不做预处理
+	success: function(res) {
+	    return;
+	},
+	error: function(e){
+	    alert(e.msg);
+
+	}
+}).done(function(res){
+        var result = '';
+        var result1 = '';
+        result += '<img src="' + res['p_url'] + '" width="100">';
+        $('#result').html(result);
+    }
+    );
+}
+
+</script>
+</body>
+</html>
