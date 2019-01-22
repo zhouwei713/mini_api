@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="969c2157-a2aa-4f07-a147-1d5e805730c5" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/my.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/my.sqlite3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_server/templates/js_upload.html" beforeDir="false" afterPath="$PROJECT_DIR$/test_server/templates/js_upload.html" afterDir="false" />
-    </list>
+    <list default="true" id="969c2157-a2aa-4f07-a147-1d5e805730c5" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,8 +58,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/api_1_0/api_user.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="646">
-              <caret line="94" selection-start-line="94" selection-end-line="94" selection-end-column="91" />
+            <state relative-caret-position="475">
+              <caret line="88" column="26" selection-start-line="88" selection-start-column="26" selection-end-line="88" selection-end-column="26" />
               <folding>
                 <element signature="e#62#80#0" expanded="true" />
                 <marker date="1547719112089" expanded="true" signature="573:578" ph="..." />
@@ -372,6 +369,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="1358" y="-675" width="2576" height="1416" extended-state="7" />
+    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.13238771" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -553,8 +551,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/api_1_0/api_user.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="646">
-          <caret line="94" selection-start-line="94" selection-end-line="94" selection-end-column="91" />
+        <state relative-caret-position="475">
+          <caret line="88" column="26" selection-start-line="88" selection-start-column="26" selection-end-line="88" selection-end-column="26" />
           <folding>
             <element signature="e#62#80#0" expanded="true" />
             <marker date="1547719112089" expanded="true" signature="573:578" ph="..." />
