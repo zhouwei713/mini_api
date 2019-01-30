@@ -1,0 +1,102 @@
+<!doctype html>
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/handsontable-pro@latest/dist/handsontable.full.min.css">
+<link rel="stylesheet" type="text/css" href="https://handsontable.com/static/css/main.css">
+<script src="https://cdn.jsdelivr.net/npm/handsontable-pro@latest/dist/handsontable.full.min.js"></script>
+<script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+</head>
+<body>
+<h1>Test</h1>
+<div data-jsfiddle="example1" class="ajax-container">
+      <div class="controls">
+        <!--<button name="load" id="load" class="intext-btn">Load</button>-->
+        <button name="save" id="save" class="intext-btn">Save</button>
+        <label><input type="checkbox" name="autosave" id="autosave" checked="checked" autocomplete="off">Autosave</label>
+      </div>
+      <div id="example1" class="hot"></div>
+</div>
+<div id="hot"></div>
+<script>
+var
+  $$ = function(id) {
+    return document.getElementById(id);
+  },
+  container = $$('example1'),
+  exampleConsole = $$('example1console'),
+  autosave = $$('autosave'),
+  load = $$('load'),
+  save = $$('save'),
+  autosaveNotification,
+  hot;
+var data = [
+  ["", "", "", ],
+  ["", "",""],
+];
+
+var container = document.getElementById('hot');
+var hot = new Handsontable(container, {
+  data: data,
+  rowHeaders: true,
+  colHeaders: true,
+  filters: true,
+  dropdownMenu: true,
+  contextMenu: true,
+    colHeaders: [
+    'ID',
+    '名称',
+    '项目',
+  ],
+  afterChange: function (change, source) {
+    if (source === 'loadData') {
+      return; //don't save this change
+    }
+    if (!autosave.checked) {
+      return;
+    }
+          //console.log(change);
+          //console.log(source);
+    $.ajax({
+    method: "POST",
+    url: "/api/autosavedata",
+    timeout: 10000,
+    data: JSON.stringify({data: change}),
+    async: false,
+    headers: {"client-type":"platform",},
+    dataType: "json",
+    contentType:false,
+	processData:false,//数据不做预处理
+	success: function(res) {
+	    return;
+	},
+	error: function(e){
+	    alert(e.msg);
+	}
+})
+}
+});
+
+Handsontable.dom.addEvent(save, 'click', function() {
+  // save all cell's data
+  console.log(hot.getData())
+      $.ajax({
+    method: "POST",
+    url: "/api/savetotest",
+    timeout: 10000,
+    data: JSON.stringify({data: hot.getData()}),
+    async: false,
+    headers: {"client-type":"platform",},
+    dataType: "json",
+    contentType:false,
+	processData:false,//数据不做预处理
+	success: function(res) {
+	    return;
+	},
+	error: function(e){
+	    alert(e.msg);
+	}
+})
+});
+</script>
+</body>
+</html>

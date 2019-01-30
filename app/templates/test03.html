@@ -1,0 +1,228 @@
+<!doctype html>
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/handsontable-pro@latest/dist/handsontable.full.min.css">
+<link rel="stylesheet" type="text/css" href="https://handsontable.com/static/css/main.css">
+<script src="https://cdn.jsdelivr.net/npm/handsontable-pro@latest/dist/handsontable.full.min.js"></script>
+<script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="http://oss.sheetjs.com/js-xlsx/xlsx.full.min.js"></script>
+<script>
+var utl = {};
+utl.Binary = {
+fixdata(data) { var o = "",
+l = 0,
+w = 10240;
+for (; l < data.byteLength / w; ++l) o += String.fromCharCode.apply(null, new Uint8Array(data.slice(l * w, l * w + w)));
+o += String.fromCharCode.apply(null, new Uint8Array(data.slice(l * w)));
+return o;
+},
+s2ab(s) { var buf = new ArrayBuffer(s.length);
+var view = new Uint8Array(buf);
+for (var i = 0; i != s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
+return buf;
+}
+}
+utl.XLSX = {
+wb: null,
+rABS: false,
+import(f, c) {this.wb = null;
+var reader = new FileReader();
+reader.onload = function (e) {
+var data = e.target.result;
+if (utl.XLSX.rABS) {
+utl.XLSX.wb = XLSX.read(btoa(utl.Binary.fixdata(data)), {type: 'base64'
+});
+} else {
+utl.XLSX.wb = XLSX.read(data, {
+type: 'binary'
+});
+}
+if (c && typeof (c)) {
+c();
+}
+};
+if (utl.XLSX.rABS) {
+reader.readAsArrayBuffer(f);
+} else {
+reader.readAsBinaryString(f);
+}
+},
+onImport(obj, c) {if (!obj.files) {
+return;
+}
+this.import(obj.files[0], c);
+},
+getSheetsByIndex(index = 0) {return XLSX.utils.sheet_to_json(this.wb.Sheets[this.wb.SheetNames[index]]);
+},
+getCharCol(n) {
+let temCol = '',
+s = '',
+m = 0
+while (n > 0) {
+m = n % 26 + 1
+s = String.fromCharCode(m + 64) + s
+n = (n - m) / 26
+}
+return s
+},
+export(json, title, type) {var keyMap = [];for (k in json[0]) {
+keyMap.push(k);
+}
+var tmpdata = [];json.map((v, i) => keyMap.map((k, j) => Object.assign({}, {
+v: v[k],
+position: (j > 25 ? utl.XLSX.getCharCol(j) : String.fromCharCode(65 + j)) + (i + 1)
+}))).reduce((prev, next) => prev.concat(next)).forEach((v, i) => tmpdata[v.position] = {
+v: v.v
+});
+var outputPos = Object.keys(tmpdata); var tmpWB = new Object();
+title = title ? title : "mySheet";
+tmpWB.SheetNames = [title];
+tmpWB.Sheets = {};
+tmpWB.Sheets[title] = Object.assign({}, tmpdata, {
+'!ref': outputPos[0] + ':' + outputPos[outputPos.length - 1] });
+return new Blob([utl.Binary.s2ab(XLSX.write(tmpWB,
+{ bookType: (type == undefined ? 'xlsx' : type), bookSST: false, type: 'binary' }))], { type: "" }); },
+onExport(json, title, type) {utl.Download.byObj(this.export(json, title, type), "下载.xlsx");
+}
+};
+utl.Download = {
+byURL(url, fileName) {var tmpa = document.createElement("a");
+tmpa.download = fileName || "下载";
+tmpa.href = url; tmpa.click(); },
+byObj(obj, fileName) {this.byURL(URL.createObjectURL(obj), fileName);
+setTimeout(function () { URL.revokeObjectURL(obj); }, 100);
+}
+}
+utl.Object = {
+reverse(obj) {var o = new Object();
+for (var k in obj) {
+o[obj[k]] = k;
+}
+return o;
+},
+deepCopy() {let temp = obj.constructor === Array ? [] : {}
+for (let val in obj) {
+temp[val] = typeof obj[val] == 'object' ? deepCopy(obj[val]) : obj[val];
+}
+return temp;
+},
+copyJson(o) { return JSON.parse(JSON.stringify(o)); }}
+</script>
+<style>
+    * {
+margin: 0;
+padding: 0;
+}
+body {
+font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, SimSun, sans-serif;
+overflow: auto;
+font-weight: 400;
+-webkit-font-smoothing: antialiased;
+}
+</style>
+<script>
+const xHred = {
+"ID": "id",
+"账号": "uname",
+"用户名": "rname",
+"爱好": "hobby",
+"能力": "ability",
+"频率": "freq",
+"颜值": "fv"
+};
+</script>
+</head>
+<body>
+<h1>Test</h1>
+<div data-jsfiddle="example1" class="ajax-container">
+      <div class="controls">
+        <!--<button name="load" id="load" class="intext-btn">Load</button>-->
+        <input type="file" value="选择模板" onchange="impt(this)" />
+        <button name="save" id="save" class="intext-btn">Save</button>
+        <label><input type="checkbox" name="autosave" id="autosave" checked="checked" autocomplete="off">Autosave</label>
+        <input type="button" value="下载" onclick="down()" />
+         <!--<input type="button" value="查看结果数据数据" onclick="showData()" />-->
+      </div>
+      <div id="example1" class="hot"></div>
+</div>
+<div id="hot"></div>
+<script>
+function impt(emt) {utl.XLSX.onImport(emt, function () {
+var rt = utl.XLSX.getSheetsByIndex();var tmp = [];
+rt.forEach(function (value, index, array) {
+var t = new Object();
+for (var k in value) {
+t[xHred[k]] = value[k];
+}
+tmp.push(t);
+});
+hot.loadData(tmp);});
+}
+function down() {
+var d = utl.Object.copyJson(hot.getSourceData())
+d.unshift(utl.Object.reverse(xHred));
+utl.XLSX.onExport(d);
+}
+function showData() {
+var tmp = [];
+hot.getSourceData().forEach(function (value, index, array) {
+var t = new Object();
+for (var k in value) {
+t[k] = filterVal[k] ? filterVal[k](value[k]) : value[k];}
+tmp.push(t);
+});
+alert(JSON.stringify(tmp));
+window.open("data:text/html;charset=utf-8,"+JSON.stringify(tmp));
+console.log(tmp);
+return tmp;
+}
+</script>
+<script>
+var hotElement = document.querySelector('#hot');var colHeaders = [];var cols = [];for (var key in xHred) {
+cols.push({ data: xHred[key] });
+colHeaders.push(key);
+}
+var hotSettings = {colHeaders: colHeaders,
+data: [],
+columns: cols,
+autoWrapRow: true,
+minRows: 1,
+manualColumnResize: true,
+manualRowResize: true,
+stretchH: "all",
+manualColumnMove: true,
+manualRowMove: true,
+rowHeaders: true,
+columnSorting: true,
+sortIndicator: true,
+contextMenu: true,
+autoColumnSize: true,
+dropdownMenu: true,};
+var hot = new Handsontable(hotElement, hotSettings);
+
+Handsontable.dom.addEvent(save, 'click', function() {
+  // save all cell's data
+  console.log(hot.getData())
+      $.ajax({
+    method: "POST",
+    url: "/api/savetonew",
+    timeout: 10000,
+    data: JSON.stringify({data: hot.getData()}),
+    async: false,
+    headers: {"client-type":"platform",},
+    dataType: "json",
+    contentType:false,
+	processData:false,//数据不做预处理
+	success: function(res) {
+	    return;
+	},
+	error: function(e){
+	    alert(e.msg);
+	}
+})
+});
+</script>
+</body>
+
+
+</html>

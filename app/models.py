@@ -54,4 +54,30 @@ class Picture(db.Model):
     picture = db.Column(db.Text)
 
 
+class TestCase(db.Model):
+    __tablename__ = 'testcase'
+    id = db.Column(db.String(128), primary_key=True)
+    casename = db.Column(db.String(128))
+    casestep = db.Column(db.Text)
+    caseproject = db.Column(db.String(128))
+
+
+class Testtable(db.Model):
+    __tablename__ = 'testtable'
+    id = db.Column(db.String(128), primary_key=True)
+    name = db.Column(db.String(128))
+    project = db.Column(db.String(128))
+
+
+class TestNew(db.Model):
+    __tablename__ = 'testnew'
+    id = db.Column(db.String(128), primary_key=True)
+    account = db.Column(db.String(128))
+    username = db.Column(db.String(128))
+    hobby = db.Column(db.String(128))
+    ability = db.Column(db.String(128))
+    freq = db.Column(db.String(128))
+    fv = db.Column(db.String(128))
+
+
 
